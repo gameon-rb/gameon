@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/gameon-rb/gameon"
   spec.license       = "MIT"
 
-  spec.files       = ["lib/gameon.rb"]
+  spec.files       =  Dir.glob("{lib}/**/*")  
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "mushin"
