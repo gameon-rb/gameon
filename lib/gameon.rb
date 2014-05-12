@@ -1,5 +1,4 @@
 require "gameon/version"
+require "mushin"
 
-module Gameon
-  # Your code goes here...
-end
+require_relative './gameon/base'
