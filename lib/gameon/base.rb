@@ -8,7 +8,6 @@ module GameOn
     require 'redis'
     @@redis = Redis.new
     Marshal.load @@redis.get id
-    #p env[:gameon].id 
   end
 
   class Env < Mushin::Env
