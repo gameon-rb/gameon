@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "gameon"
-  spec.version       = "0.0.0.pre6"
+  spec.version       = "0.0.0.pre10"
   spec.authors       = ["theotherstupidguy"]
   spec.email         = ["theotherstupidguy@gmail.com"]
   spec.summary       = "gamification framework" 
@@ -15,7 +15,10 @@ Gem::Specification.new do |spec|
   spec.files       =  Dir.glob("{lib}/**/*")  
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "mushin"
-  spec.add_development_dependency "bundler", "~> 1.5"
-  spec.add_development_dependency "rake"
+  spec.add_dependency "mushin", "~> 0.0.0.pre7"
+
+  #spec.add_development_dependency "minitest", "~> 4.7.3"
+  #spec.add_development_dependency "mushin", "~> 0.0.0.pre6"
+  #spec.add_development_dependency "bundler", "~> 1.5"
+  #spec.add_development_dependency "rake"
 end

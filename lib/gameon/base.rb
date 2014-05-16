@@ -1,8 +1,3 @@
-require_relative './gamebook/game'
-require_relative './gamebook/rule'
-require_relative './gamebook/dynamic'
-
-
 module GameOn
   def GameOn.env id
     require 'redis'
@@ -15,27 +10,7 @@ module GameOn
 
   module Gamebook
     extend Mushin::DSL::Notebook 
-    @@constructs = [] 
-    # this is Mandatory as the .find funtion in DSL::Notebook needs it 
-    @@games = []
-    def game title, &block
-      @@game = GameOn::Gamebook::Game.new title
-      def rule rule=[], &block
-	@rule = GameOn::Gamebook::Rule.new rule
-	def activate dynamic, opts={}, params={}
-	  @dynamic = GameOn::Gamebook::Dynamic.new dynamic, opts, params
-	  @rule.add_dynamic @dynamic 
-	end
-	@@game.add_rule @rule
-	yield
-      end
-      yield
-      @@games << @@game
-      @@constructs = @@games
-    end
-    def Gamebook.games
-      @@games
-    end
+    Mushin::DSL::Notebook.build 'game', 'rule', 'activate' 
   end
 
   class Activities < Mushin::DSL::Activities
