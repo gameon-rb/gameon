@@ -12,8 +12,17 @@ module GameOn
   end
 
   class Env < Mushin::Env
-
+    @@ds = 'GameOn::Persistence::DS'
+    #Mushin::Engine.setup [GameOn::Persistence::DS]
   end
+=begin
+  module Engine
+    def Engine.run game, activity
+      Mushin::Engine.setup [GameOn::Persistence::DS]
+      Mushin::Engine.run game, activity
+    end
+  end
+=end
 
   #class Activities < Mushin::DSL::Activities
   #include Mushin::DSL::Activities
@@ -38,4 +47,5 @@ module GameOn
     end
   end
 =end
+
 end
