@@ -1,26 +1,30 @@
 module GameOn
   def GameOn.env id
-    require 'redis'
-    @@redis = Redis.new
-    Marshal.load @@redis.get id
+    GameOn::Persistence::DS.load id
   end
 
-  class Env < Mushin::Env
-  end
-
+  
   module Gamebook
     extend Mushin::DSL::Notebook 
     Mushin::DSL::Notebook.build 'game', 'rule', 'activate' 
+    #TODO As a Framework developer you get to add alias_methods
+    # Example  alias_method :ninja, :rule
   end
 
-  class Activities < Mushin::DSL::Activities
-    #include Mushin::DSL::Activities
-    #extend Mushin::DSL::Activities
-    def self.construction game, activity   
-      GameOn::Engine.run game, activity   
-    end
+  class Env < Mushin::Env
+
   end
 
+  #class Activities < Mushin::DSL::Activities
+  #include Mushin::DSL::Activities
+  #extend Mushin::DSL::Activities
+  #TODO transfer construction to mushin
+  #def self.construction game, activity   
+  #  GameOn::Engine.run game, activity   
+  #end
+  #end
+ 
+=begin
   module Engine
     def Engine.run game, activity
       #[Mushin::Presistence::DS, Mushin::blahblah]
@@ -33,4 +37,5 @@ module GameOn
       Mushin::Engine.run game, activity
     end
   end
+=end
 end
