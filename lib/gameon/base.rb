@@ -1,8 +1,4 @@
 module GameOn
-  def GameOn.env id
-    GameOn::Persistence::DS.load id
-  end
-
   module Gamebook
     extend Mushin::DSL::Notebook 
     Mushin::DSL::Notebook.build 'game', 'rule', 'activate' 
@@ -10,7 +6,14 @@ module GameOn
     # Example  alias_method :ninja, :rule
   end
 
+  class Middleware 
+    include Mushin::Customization 
+  end
+
   class Env < Mushin::Env
     @@ds = 'GameOn::Persistence::DS'
+    def Env.get id
+      GameOn::Persistence::DS.load id
+    end
   end
 end
