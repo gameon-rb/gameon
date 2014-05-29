@@ -22,7 +22,7 @@ module GameOn
       Mushin::DSL.middlewares
     end
   end
-
+=begin
   module Engine
     extend Mushin::Engine
     attr_accessor :middlewares, :stack
@@ -41,8 +41,27 @@ module GameOn
       @@middlewares = []
     end
   end
-
-  #module Env 
+=end
+  module Engine
+    extend Mushin::Engine
+    class << self
+      #attr_accessor :middlewares, :stack
+      def run domain_context, activity
+	#@middlewares = GameOn::DSL.find domain_context, activity 
+	@stack = Mushin::Middleware::Builder.new do
+	(GameOn::DSL.find domain_context, activity).each do |middleware|
+	    p "Mushin Logging: use #{middleware.name}, #{middleware.opts}, #{middleware.params}"
+	    use middleware.name, middleware.opts, middleware.params
+	  end
+	end
+	@setup_middlewares.each do |setup_middleware|
+	  @stack.insert_before 0, setup_middleware 
+	end
+	@stack.call
+	#@middlewares = []
+      end
+    end
+  end
   class Env 
     extend Mushin::Env
 
@@ -73,7 +92,6 @@ module GameOn
 	end
 	return GameOn::Persistence::DS.load @id 
       end
-      #alias_method :[], :set
     end
   end
 end
