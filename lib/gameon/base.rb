@@ -22,26 +22,7 @@ module GameOn
       Mushin::DSL.middlewares
     end
   end
-=begin
-  module Engine
-    extend Mushin::Engine
-    attr_accessor :middlewares, :stack
-    def self.run domain_context, activity
-      @@middlewares = GameOn::DSL.find domain_context, activity 
-      @stack = Mushin::Middleware::Builder.new do
-	@@middlewares.each do |middleware|
-	  p "Mushin Logging: use #{middleware.name}, #{middleware.opts}, #{middleware.params}"
-	  use middleware.name, middleware.opts, middleware.params
-	end
-      end
-      @setup_middlewares.each do |setup_middleware|
-	@stack.insert_before 0, setup_middleware 
-      end
-      @stack.call
-      @@middlewares = []
-    end
-  end
-=end
+
   module Engine
     extend Mushin::Engine
     class << self
@@ -49,7 +30,7 @@ module GameOn
       def run domain_context, activity
 	#@middlewares = GameOn::DSL.find domain_context, activity 
 	@stack = Mushin::Middleware::Builder.new do
-	(GameOn::DSL.find domain_context, activity).each do |middleware|
+	  (GameOn::DSL.find domain_context, activity).each do |middleware|
 	    p "GameOn Logging: use #{middleware.name}, #{middleware.opts}, #{middleware.params}"
 	    use middleware.name, middleware.opts, middleware.params
 	  end
@@ -62,6 +43,7 @@ module GameOn
       end
     end
   end
+
   class Env 
     extend Mushin::Env
 
@@ -78,18 +60,19 @@ module GameOn
 	  @domain_context = domain_context 
 	  @activities = []  
 	  def activity statment 
-	    @activities += [statment]                                                                          
+	    @activities << statment
+	    #@activities += [statment]                                                                          
 	  end
 	  instance_eval(&block)
 	end
 	instance_eval(&block)
 
 	Dir["./gameon/*"].each {|file| load file }  
-
 	GameOn::Engine.setup [Object.const_get('GameOn::Persistence::DS')]
 	@activities.each do |activity| 
 	  GameOn::Engine.run @domain_context, activity   
 	end
+	#@activities = [] # reset the activities 
 	return GameOn::Persistence::DS.load @id 
       end
     end
