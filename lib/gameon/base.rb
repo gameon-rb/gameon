@@ -50,7 +50,7 @@ module GameOn
 	#@middlewares = GameOn::DSL.find domain_context, activity 
 	@stack = Mushin::Middleware::Builder.new do
 	(GameOn::DSL.find domain_context, activity).each do |middleware|
-	    p "Mushin Logging: use #{middleware.name}, #{middleware.opts}, #{middleware.params}"
+	    p "GameOn Logging: use #{middleware.name}, #{middleware.opts}, #{middleware.params}"
 	    use middleware.name, middleware.opts, middleware.params
 	  end
 	end
