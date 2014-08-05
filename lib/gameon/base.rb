@@ -22,7 +22,7 @@ module GameOn
 		#  end
 		if !Mushin::DSL.middlewares.empty?
 		  Mushin::DSL.middlewares.each do |prev| 
-		    if prev[0] == middleware.name && prev[1] == middleware.opts && prev[2] ==  middleware.params
+		    if prev.name == middleware.name && prev.opts == middleware.opts && prev.params ==  middleware.params
 		      p "activation already exists nothing to do"
 		    else
 		      p "adding new activation"
