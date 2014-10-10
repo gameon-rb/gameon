@@ -6,43 +6,46 @@ module GameOn
 
   module DSL 
     include Mushin::DSL
-    def self.find activity_context, activity_statment
-      Mushin::DSL.middlewares = []
-      Mushin::DSL.contexts.each do |current_context|
-	if activity_context == current_context.title
-	  current_context.statments.each do |statment|
-	    if activity_statment == statment.title
-	      statment.activations.uniq.each do |middleware|
 
-		#middleware.name, middleware.opts, middleware.params
-		#Mushin::DSL.middlewares.each do |prev| 
-		#  if prev[0] == name && prev[1] == opts && prev[2] ==  params 
-		#    p "adding new activation" 
-		#    Mushin::DSL.middlewares << middleware 
-		#  end
-		if !Mushin::DSL.middlewares.empty?
-		  Mushin::DSL.middlewares.each do |prev| 
+    def self.find current_context_title, current_activity_title
+
+      #Mushin::DSL.middlewares = [] #could be GameOn::DSL.middlewares
+
+      Mushin::DSL.contexts.each do |context|
+	if context.title == current_context_title
+	  context.statments.each do |activity|
+	    if activity.title == current_activity_title
+	      @@middlewares = []
+	      activity.activations.each do |middleware|
+		#if Mushin::DSL.middlewares.empty?
+		if @@middlewares.empty?
+		  p "adding first middleware !!!"
+		  @@middlewares << middleware 
+		  #return @@middlewares
+		  #  Mushin::DSL.middlewares << middleware 
+		else
+		  # Mushin::DSL.middlewares.each do |prev| 
+		  @@middlewares.each do |prev|
 		    if prev.name == middleware.name && prev.opts == middleware.opts && prev.params ==  middleware.params
-		      p "activation already exists nothing to do"
+		      p "this activation already exists nothing to do!!!"
 		    else
 		      p "adding new activation"
-		      Mushin::DSL.middlewares << middleware 
 		      #Mushin::DSL.middlewares << middleware 
+		      @@middlewares << middleware 
+		      p "$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+		      #p Mushin::DSL.middlewares
 		    end
 		  end
-		else
-		  Mushin::DSL.middlewares << middleware 
 		end
-
-
+		return @@middlewares
 	      end
 	    end
 	  end
 	end
+
       end
-      p "$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-      p Mushin::DSL.middlewares
-      Mushin::DSL.middlewares
+      #return Mushin::DSL.middlewares
+      #Mushin::DSL.middlewares = []
     end
   end
 
@@ -93,7 +96,7 @@ module GameOn
 	@activities.uniq.each do |activity| 
 	  GameOn::Engine.run @domain_context, activity   
 	end
-	#@activities = [] # reset the activities 
+	@activities = [] # reset the activities 
 	return GameOn::Persistence::DS.load @id 
       end
     end

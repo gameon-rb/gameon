@@ -171,7 +171,7 @@ describe "a sinatra web application" do
 
   before do
     @app_key = "secret_key used by domain frameworks for encryptions"
-    @user_id = "01"
+    @user_id = rand(1000000).to_s #@user_id = "05"
   end
 
   include Rack::Test::Methods
@@ -191,6 +191,6 @@ describe "a sinatra web application" do
 
   after do 
     redis = Redis.new
-    #redis.del @user_id + 'gameon' 
+    redis.del @user_id + 'gameon' 
   end
 end
