@@ -12,10 +12,10 @@ module GameOn
 
       Mushin::DSL.contexts.each do |context|
 	if context.title == current_context_title
-	  context.statments.each do |activity|
+	  context.activities.each do |activity|
 	    if activity.title == current_activity_title
 	      @middlewares = []
-	      activity.activations.each do |middleware|
+	      activity.uses.each do |middleware|
 
 		if @middlewares.empty?
 		  p "adding first middleware !!!"
@@ -79,11 +79,11 @@ module GameOn
 
       def set id, &block 
 	@id = id.to_s + 'gameon' 
-	def on domain_context, &block
-	  @domain_context = domain_context 
+	def context current_context_title, &block
+	  @current_context_title = current_context_title  
 	  @activities = []  
-	  def activity statment 
-	    @activities << statment
+	  def activity current_activity_title 
+	    @activities << current_activity_title 
 	  end
 	  instance_eval(&block)
 	end
@@ -91,8 +91,8 @@ module GameOn
 
 	Dir["./gameon/*"].each {|file| load file }  
 	GameOn::Engine.setup [Object.const_get('GameOn::Persistence::DS')]
-	@activities.uniq.each do |activity| 
-	  GameOn::Engine.run @domain_context, activity   
+	@activities.uniq.each do |current_activity_title| 
+	  GameOn::Engine.run @current_context_title, current_activity_title  
 	end
 	@activities = [] # reset the activities 
 	return GameOn::Persistence::DS.load @id 

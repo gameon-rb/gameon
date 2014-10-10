@@ -108,7 +108,7 @@ get '/good/:id' do
   user = User.new params[:id]
 
   GameOn::Env.set user.id do 
-    on :good_mayor do 
+    context :good_mayor do 
       activity [:user, :visits, :good_page_four]
     end
   end
