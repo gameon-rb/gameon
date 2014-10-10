@@ -120,7 +120,7 @@ get '/good/:id' do
   "#{gameon.id}: #{gameon.points}"  #"#{Time.now} Welcome #{gameon.id} Current score is #{gameon.points}"
 end
 
-GameOn::Points::Params[:addition] = {:add => 1} 
+GameOn::Points::Params[:addition] = {:add => 10} 
 module GoMaster 
   module Gamebook 
     extend GameOn::DSL
@@ -129,41 +129,10 @@ module GoMaster
     context :good_mayor do 
       statment [:user, :visits, :good_page_four] do 
 	activation GameOn::Points, opts, GameOn::Points::Params[:addition] 
+	activation GameOn::Points, opts, {:remove => 3}
 	#activation GameOn::Points, opts, {:add => 1} 
       end
     end
-  end
-end
-
-describe "GameOn Framework" do
-  before do 
-  end
-
-  it "provides a GameOn DSL for Gamification Experts & Domain Developers" do 
-    module GoMaster 
-      module Gamebook 
-	extend GameOn::DSL
-	opts = {:inc_by => 1, :dec_by => 1 }
-
-	context :good_mayor do 
-	  statment [:user, :visits, :good_page_two] do 
-	    activation GameOn::Points, opts, {:add => 2}
-	  end
-	end
-
-	context :bad_mayor do 
-	  statment [:user, :visits, :bad_page_two] do 
-	    activation GameOn::Points, opts, {:remove => 2}
-	  end
-	end
-
-      end 
-    end 
-
-  end
-
-  it "provides a Domain Enviroment" do 
-
   end
 end
 
@@ -186,7 +155,7 @@ describe "a sinatra web application" do
     end
     last_response.must_be :ok?
     last_response.body.must_include "#{@user_id+'gameon'}:"
-    last_response.body.must_equal "#{@user_id+'gameon'}: #{10}" 
+    last_response.body.must_equal "#{@user_id+'gameon'}: #{70}" 
   end
 
   after do 
@@ -194,3 +163,39 @@ describe "a sinatra web application" do
     redis.del @user_id + 'gameon' 
   end
 end
+
+=begin # remove into its own file
+describe "GameOn Framework" do
+  before do 
+  end
+
+  it "provides a GameOn DSL for Gamification Experts & Domain Developers" do 
+
+    module GoMaster 
+      module Gamebook 
+	extend GameOn::DSL
+	opts = {:inc_by => 1, :dec_by => 1 }
+
+	context :good_mayor do 
+	  statment [:user, :visits, :good_page_two] do 
+	    activation GameOn::Points, opts, {:remove => 2}
+	    activation GameOn::Points, opts, {:add => 2}
+	  end
+	end
+
+	context :bad_mayor do 
+	  statment [:user, :visits, :bad_page_two] do 
+	    activation GameOn::Points, opts, {:remove => 2}
+	  end
+	end
+
+      end 
+    end 
+
+  end
+
+  it "provides a Domain Enviroment" do 
+
+  end
+end
+=end

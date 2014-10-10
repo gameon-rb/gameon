@@ -9,36 +9,34 @@ module GameOn
 
     def self.find current_context_title, current_activity_title
 
-      #Mushin::DSL.middlewares = [] #could be GameOn::DSL.middlewares
 
       Mushin::DSL.contexts.each do |context|
 	if context.title == current_context_title
 	  context.statments.each do |activity|
 	    if activity.title == current_activity_title
-	      @@middlewares = []
+	      @middlewares = []
 	      activity.activations.each do |middleware|
-		#if Mushin::DSL.middlewares.empty?
-		if @@middlewares.empty?
+
+		if @middlewares.empty?
 		  p "adding first middleware !!!"
-		  @@middlewares << middleware 
-		  #return @@middlewares
-		  #  Mushin::DSL.middlewares << middleware 
+		  p "$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+		  @middlewares << middleware 
+		  p @middlewares
 		else
-		  # Mushin::DSL.middlewares.each do |prev| 
-		  @@middlewares.each do |prev|
+		  @middlewares.each do |prev|
 		    if prev.name == middleware.name && prev.opts == middleware.opts && prev.params ==  middleware.params
-		      p "this activation already exists nothing to do!!!"
+		      p "this activation already exists, thus nothing to do!!!"
 		    else
 		      p "adding new activation"
-		      #Mushin::DSL.middlewares << middleware 
-		      @@middlewares << middleware 
 		      p "$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-		      #p Mushin::DSL.middlewares
+		      @middlewares << middleware 
+		      p @middlewares
 		    end
 		  end
 		end
-		return @@middlewares
+
 	      end
+	      return @middlewares
 	    end
 	  end
 	end
